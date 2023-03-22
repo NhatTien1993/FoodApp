@@ -40,7 +40,6 @@ const MyCart = () => {
         dispatch(orderFoodList(updateOrderList))
     }
     const handleDecreQuantity = (id) => {
-        console.log('dec', id)
         let updateOrderList = orderList.map((item, index) => {
             if (index === id) {
                 if (item.qty > 1) {
@@ -49,7 +48,8 @@ const MyCart = () => {
                         qty: item.qty -= 1
                     }
                 } else {
-                    return
+                    alert('Trượt sang trái để xoá sp')
+                    return item
                 }
             } else {
                 return item
@@ -58,7 +58,7 @@ const MyCart = () => {
         dispatch(orderFoodList(updateOrderList))
     }
     const totalPay = orderList.reduce((total, item) => {
-        return total += (item.price * item.qty)
+        return total += (item?.price * item?.qty)
     }, 0)
     const handleCheckout = () => {
         // Call API or any...
@@ -81,7 +81,7 @@ const MyCart = () => {
     const ItemCart = ({ item, index }) => {
         return (
             <View
-                key={item.id}
+                key={item?.id}
                 style={{ backgroundColor: COLORS.white, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', borderRadius: 5, marginBottom: 20, height: 100, ...STYLES.shadow }}>
                 <Image
                     style={{ width: 100, height: 100, borderBottomLeftRadius: 5, borderTopLeftRadius: 5 }}

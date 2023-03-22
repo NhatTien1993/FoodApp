@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { COLORS, SIZES } from '../../../../common/Theme'
 import { ICONS } from '../../../../common/Images'
 import { storeData } from '../../../../common/Contant'
@@ -14,13 +14,22 @@ const Order = () => {
     const orderList = useSelector((state) => state.redux.orderList)
     const navigation = useNavigation()
     const { detailContext } = useContext(HomeContext)
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [totalQty, setTotalQty] = useState(0)
 
     useEffect(() => {
-        console.log(orderList)
+        const price = orderList.reduce((total, item) => {
+            return total += (item?.price * item?.qty)
+        }, 0)
+        setTotalPrice(price)
+        const qtys = orderList.reduce((total, item) => {
+            return total += item?.qty
+        }, 0)
+        setTotalQty(qtys)
     }, [orderList])
     const handleOrder = () => {
         if (Object.keys(orderItem).length != 0) {
-            const isIncludes = orderList.some((item) => item.id === orderItem.id)
+            const isIncludes = orderList.some((item) => item?.id === orderItem.id)
             if (isIncludes) {
                 const newList = []
                 orderList.forEach((item, index) => {
@@ -45,8 +54,8 @@ const Order = () => {
     return (
         <View style={styles.order}>
             <View style={styles.order_item}>
-                <Text style={styles.order_text1}>4 Items in Cart</Text>
-                <Text style={styles.order_text1}>$46.58</Text>
+                <Text style={styles.order_text1}>{`${totalQty} Items in Cart`}</Text>
+                <Text style={styles.order_text1}>{`$${totalPrice}`}</Text>
             </View>
             <View style={styles.order_line}></View>
             <View style={styles.order_item}>
